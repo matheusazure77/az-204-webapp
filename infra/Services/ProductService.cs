@@ -1,8 +1,10 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
-using sqlapp.Models;
+using domain.Entities;
+using domain.Services;
 
-namespace sqlapp.Services
+namespace infra.Services
 {
     public class ProductService : IProductService
     {

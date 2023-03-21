@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using sqlapp.Models;
-using sqlapp.Services;
+using domain.Entities;
+using domain.Services;
 
 namespace sqlapp.Pages
 {

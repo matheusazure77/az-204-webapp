@@ -1,4 +1,4 @@
-﻿namespace sqlapp.Models
+﻿namespace domain.Entities
 {
     public class Product
     {

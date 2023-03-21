@@ -1,6 +1,6 @@
-﻿using sqlapp.Models;
+﻿using domain.Entities;
 
-namespace sqlapp.Services
+namespace domain.Services
 {
     public interface IProductService
     {
