@@ -1,6 +1,8 @@
 using Microsoft.FeatureManagement;
 using domain.Services;
 using infra.Services;
+using infra.Repositories;
+using domain.Repositories;
 
 var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0:wkew/Z2SNYqotKPRu0Z5;Secret=Dy93q7PDgqCr7HKeL/HshnL2BrExCpb0pANcNksb9vQ=";
 
@@ -14,6 +16,7 @@ builder.Host.ConfigureAppConfiguration(app => {
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddFeatureManagement();
 
 var app = builder.Build();

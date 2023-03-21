@@ -3,18 +3,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
 using domain.Entities;
 using domain.Services;
+using domain.Repositories;
 
 namespace infra.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IProductRepository _productRepository;
         private readonly IFeatureManager _featureManager;
 
-        public ProductService(IConfiguration configuration, IFeatureManager featureManager)
-        {
-            _configuration = configuration;
+        public ProductService(IProductRepository productRepository, IFeatureManager featureManager)
+        {            
             _featureManager = featureManager;
+            _productRepository = productRepository;
         }
 
         public async Task<bool> IsBeta()
@@ -26,34 +27,9 @@ namespace infra.Services
             return false;
         }
 
-        private SqlConnection GetConnection()
-        {
-            return new SqlConnection(_configuration["SQLConnection"]);
-        }
-
         public List<Product> GetProducts()
-        {
-            SqlConnection conn = GetConnection();
-            var products = new List<Product>();
-            string sql = "SELECT ProductID, ProductName, Quantity FROM Products";
-            conn.Open();
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Product product = new Product()
-                    {
-                        ProductID = reader.GetInt32(0),
-                        ProductName = reader.GetString(1),
-                        Quantity = reader.GetInt32(2)
-                    };
-                    products.Add(product);
-                }
-            }
-            conn.Close();
-            return products;
+        {            
+            return _productRepository.GetProducts();
         }
 
     }
