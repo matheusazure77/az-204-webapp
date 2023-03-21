@@ -10,6 +10,7 @@ namespace sqlapp.Pages
         private readonly IProductService _productService;
 
         public List<Product> Products = new List<Product>();
+        public bool IsBeta;
 
         public IndexModel(IProductService productService)
         {
@@ -18,6 +19,7 @@ namespace sqlapp.Pages
 
         public void OnGet()
         {
+            IsBeta = _productService.IsBeta().Result;
             Products = _productService.GetProducts();
         }
     }

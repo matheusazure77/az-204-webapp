@@ -1,3 +1,4 @@
+using Microsoft.FeatureManagement;
 using sqlapp.Services;
 
 var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0:wkew/Z2SNYqotKPRu0Z5;Secret=Dy93q7PDgqCr7HKeL/HshnL2BrExCpb0pANcNksb9vQ=";
@@ -5,13 +6,14 @@ var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureAppConfiguration(app => {
-    app.AddAzureAppConfiguration(connectionString);
+    app.AddAzureAppConfiguration(options=> options.Connect(connectionString).UseFeatureFlags());
 });
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddFeatureManagement();
 
 var app = builder.Build();
 
