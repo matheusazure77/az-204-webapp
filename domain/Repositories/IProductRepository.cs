@@ -10,5 +10,6 @@ namespace domain.Repositories
     public interface IProductRepository
     {
         List<Product> GetProducts();
+        Product? GetProduct(int productId);
     }
 }

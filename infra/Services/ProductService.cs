@@ -32,5 +32,9 @@ namespace infra.Services
             return _productRepository.GetProducts();
         }
 
+        public Product? GetProduct(int productId)
+        {
+            return _productRepository.GetProduct(productId);
+        }
     }
 }

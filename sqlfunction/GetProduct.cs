@@ -21,13 +21,27 @@ namespace sqlfunction
             _productService = productService;
         }
 
-        [FunctionName("GetProduct")]
-        public async Task<IActionResult> Run(
+        [FunctionName("GetProducts")]
+        public async Task<IActionResult> RunProducts(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {           
             var products = _productService.GetProducts();
             return new OkObjectResult(products);
+        }
+
+        [FunctionName("GetProduct")]
+        public async Task<IActionResult> RunProduct(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            int productId = int.Parse(req.Query["productId"]);
+            var product = _productService.GetProduct(productId);
+
+            if (product == null )
+                return new NotFoundObjectResult($"Product with ProductId {productId} not found");
+
+            return new OkObjectResult(product);
         }
     }
 }
