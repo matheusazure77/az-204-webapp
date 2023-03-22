@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using domain.Entities;
 using domain.Services;
+using domain.Exceptions;
 
 namespace sqlfunction
 {
@@ -27,10 +28,14 @@ namespace sqlfunction
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Product product = JsonConvert.DeserializeObject<Product>(requestBody);
-            _productService.AddProduct(product);
-
-            if (product == null)
+            try
+            {
+                _productService.AddProduct(product);
+            }
+            catch (DuplicateEntityException)
+            {
                 return new ConflictObjectResult($"Product with ProductId {product.ProductID} already exists");
+            }
 
             return new OkObjectResult(product);
         }

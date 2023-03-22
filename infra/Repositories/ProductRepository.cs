@@ -1,4 +1,5 @@
 ﻿using domain.Entities;
+using domain.Exceptions;
 using domain.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -81,6 +82,10 @@ namespace infra.Repositories
 
         public void AddProduct(Product product)
         {
+            if(GetProduct(product.ProductID) != null)
+            {
+                throw new DuplicateEntityException($"There is already a product with this id {product.ProductID}");
+            }
             using (SqlConnection conn = GetConnection())
             {
                 string insertStatement = "INSERT INTO Products (ProductID, ProductName, Quantity) VALUES (@ProductID, @ProductName, @Quantity)";
