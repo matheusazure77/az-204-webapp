@@ -36,5 +36,10 @@ namespace infra.Services
         {
             return _productRepository.GetProduct(productId);
         }
+
+        public void AddProduct(Product product)
+        {
+            _productRepository.AddProduct(product);
+        }
     }
 }

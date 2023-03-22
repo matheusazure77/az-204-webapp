@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,6 +76,25 @@ namespace infra.Repositories
                 }
                 conn.Close();
                 return product;
+            }
+        }
+
+        public void AddProduct(Product product)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                string insertStatement = "INSERT INTO Products (ProductID, ProductName, Quantity) VALUES (@ProductID, @ProductName, @Quantity)";
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(insertStatement, conn))
+                {
+                    cmd.Parameters.Add("@ProductID", System.Data.SqlDbType.Int).Value = product.ProductID;
+                    cmd.Parameters.Add("@ProductName", System.Data.SqlDbType.VarChar, 1000).Value = product.ProductName;
+                    cmd.Parameters.Add("@Quantity", System.Data.SqlDbType.Int).Value = product.Quantity;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+                
+                conn.Close();
             }
         }
     }

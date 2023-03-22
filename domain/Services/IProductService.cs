@@ -7,5 +7,6 @@ namespace domain.Services
         List<Product> GetProducts();
         Product? GetProduct(int productId);
         Task<bool> IsBeta();
+        void AddProduct(Product product);
     }
 }

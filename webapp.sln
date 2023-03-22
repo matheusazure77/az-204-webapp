@@ -5,11 +5,11 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sqlapp", "sqlapp\sqlapp.csproj", "{08AC58B9-97CC-4A24-A942-B86BB73BD953}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain", "domain\domain.csproj", "{52E3F181-D7BB-4E02-A7F5-7464625192DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "domain", "domain\domain.csproj", "{52E3F181-D7BB-4E02-A7F5-7464625192DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infra", "infra\infra.csproj", "{168D8370-62CE-4B47-96A1-D24562E7C321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infra", "infra\infra.csproj", "{168D8370-62CE-4B47-96A1-D24562E7C321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sqlfunction", "sqlfunction\sqlfunction.csproj", "{3CB05169-AD16-4B1D-9B4A-8100F1B17ABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sqlfunction", "sqlfunction\sqlfunction.csproj", "{3CB05169-AD16-4B1D-9B4A-8100F1B17ABA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

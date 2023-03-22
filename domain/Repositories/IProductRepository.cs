@@ -11,5 +11,6 @@ namespace domain.Repositories
     {
         List<Product> GetProducts();
         Product? GetProduct(int productId);
+        void AddProduct(Product product);
     }
 }
