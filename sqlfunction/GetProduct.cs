@@ -21,13 +21,23 @@ namespace sqlfunction
             _productService = productService;
         }
 
+        [FunctionName("GetIsBeta")]
+        public async Task<IActionResult> RunIsBeta(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            var isBeta = _productService.IsBeta().Result;
+
+            return new OkObjectResult(JsonConvert.SerializeObject(isBeta));
+        }
+
         [FunctionName("GetProducts")]
         public async Task<IActionResult> RunProducts(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {           
             var products = _productService.GetProducts();
-            return new OkObjectResult(products);
+            return new OkObjectResult(JsonConvert.SerializeObject(products));
         }
 
         [FunctionName("GetProduct")]
@@ -40,8 +50,8 @@ namespace sqlfunction
 
             if (product == null )
                 return new NotFoundObjectResult($"Product with ProductId {productId} not found");
-
-            return new OkObjectResult(product);
+            var json = JsonConvert.SerializeObject(product);
+            return new OkObjectResult(json);
         }
     }
 }

@@ -2,10 +2,12 @@ USE master
 CREATE LOGIN sqluser WITH PASSWORD = '1vT!KP)99?nhjkl90';
 
 USE appdb
+DROP TABLE IF EXISTS Products
 CREATE TABLE Products(
 	ProductID	int,
 	ProductName	varchar(1000),
-	Quantity	int
+	Quantity	int,
+	PRIMARY KEY (ProductID)
 )
 
 INSERT INTO Products (ProductID, ProductName, Quantity) VALUES (1, 'Mobile', 100)

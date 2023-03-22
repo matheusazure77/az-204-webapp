@@ -3,6 +3,7 @@ using domain.Services;
 using infra.Services;
 using infra.Repositories;
 using domain.Repositories;
+using sqlapp.Adapters;
 
 var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0:wkew/Z2SNYqotKPRu0Z5;Secret=Dy93q7PDgqCr7HKeL/HshnL2BrExCpb0pANcNksb9vQ=";
 
@@ -17,6 +18,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<ISQLFunctionAppAdapter, SQLFunctionAppAdapter>();
 builder.Services.AddFeatureManagement();
 
 var app = builder.Build();
