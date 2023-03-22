@@ -28,7 +28,7 @@ namespace sqlfunction
         {
             var isBeta = _productService.IsBeta().Result;
 
-            return new OkObjectResult(JsonConvert.SerializeObject(isBeta));
+            return new OkObjectResult(isBeta);
         }
 
         [FunctionName("GetProducts")]

@@ -6,26 +6,22 @@ namespace sqlapp.Adapters
 {
     public class SQLFunctionAppAdapter : ISQLFunctionAppAdapter
     {
-        private readonly IProductService _productService;
-
-        public SQLFunctionAppAdapter(IProductService productService)
-        {
-            _productService = productService;
-        }
-
+        
         public async Task<bool> IsBeta()
         {
-            var functionUrl = "http://localhost:7071/api/GetIsBeta";
+            var functionUrl = "https://appfunctionmatheus.azurewebsites.net/api/GetIsBeta?code=_vhNvdBpdJM8CfllIbz4KOAe06ldOq8yTDKv6qwHauudAzFuwgQdUg==";
+            //var functionUrl = "http://localhost:7071/api/GetIsBeta";
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(functionUrl);
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<bool>(content);
+                var result = JsonSerializer.Deserialize<bool>(content);
+                return result;
             }
         }
         public void AddProduct(Product product)
         {
-            _productService.AddProduct(product);
+            throw new NotImplementedException();
         }
 
         public async Task<Product?> GetProduct(int productId)
@@ -36,7 +32,8 @@ namespace sqlapp.Adapters
             {
                 HttpResponseMessage response = await client.GetAsync(functionUrl + $"?productId={productId}");
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Product?>(content);
+                var result = JsonSerializer.Deserialize<Product?>(content);
+                return result;
             }
         }
 

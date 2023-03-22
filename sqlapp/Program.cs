@@ -16,8 +16,6 @@ builder.Host.ConfigureAppConfiguration(app => {
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddTransient<IProductService, ProductService>();
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<ISQLFunctionAppAdapter, SQLFunctionAppAdapter>();
 builder.Services.AddFeatureManagement();
 
