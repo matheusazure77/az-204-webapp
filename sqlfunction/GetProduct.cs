@@ -25,8 +25,7 @@ namespace sqlfunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
-        {
-           
+        {           
             var products = _productService.GetProducts();
             return new OkObjectResult(products);
         }
