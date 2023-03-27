@@ -67,7 +67,7 @@ namespace infra.Repositories
             parameters.Add("@ProductID", product.ProductID);
             parameters.Add("@ProductName", product.ProductName);
             parameters.Add("@Quantity", product.Quantity);
-            _dao.ExcuteNonQuery(dml);
+            _dao.ExcuteNonQuery(dml, parameters);
             return GetProduct(product.ProductID);
         }
 
@@ -83,7 +83,7 @@ namespace infra.Repositories
             parameters.Add("@ProductID", product.ProductID);
             parameters.Add("@ProductName", product.ProductName);
             parameters.Add("@Quantity", product.Quantity);
-            _dao.ExcuteNonQuery(dml);
+            _dao.ExcuteNonQuery(dml, parameters);
             return GetProduct(product.ProductID);
         }
 
@@ -94,7 +94,9 @@ namespace infra.Repositories
                 throw new EntityNotFoundException($"There is no product with this id {productId}");
             }
             string dml = "DELETE FROM Products WHERE ProductID= @ProductID";
-            _dao.ExcuteNonQuery(dml);
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("@ProductID", productId);
+            _dao.ExcuteNonQuery(dml, parameters);
         }
     }
 }

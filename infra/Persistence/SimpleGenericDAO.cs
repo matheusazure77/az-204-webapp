@@ -19,7 +19,7 @@ namespace infra.Persistence
 
         public MySqlConnection GetConnection()
         {
-            return new MySqlConnection(_configuration["MySQLConnection"]);
+            return new MySqlConnection(_configuration["LinuxVMDockerMySQLConnection"]);
         }
 
         public int ExcuteNonQuery(string dml, IDictionary<string, object>? parameters = null)

@@ -41,6 +41,10 @@ namespace sqlfunction
             {
                 return new BadRequestObjectResult(ex.Message);
             }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex);
+            }
 
 
             return new OkObjectResult(product);
