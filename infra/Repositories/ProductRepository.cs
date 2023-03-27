@@ -1,7 +1,7 @@
 ﻿using domain.Entities;
 using domain.Exceptions;
 using domain.Repositories;
-using Microsoft.Data.SqlClient;
+using infra.Persistence;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -12,101 +12,48 @@ using System.Threading.Tasks;
 
 namespace infra.Repositories
 {
+    
     public class ProductRepository : IProductRepository
     {
-        private readonly IConfiguration _configuration;
+        private readonly IDAO<Product> _dao;
 
-        public ProductRepository(IConfiguration configuration)
+        public ProductRepository(IDAO<Product> dao)
         {
-            _configuration = configuration;
-        }
-
-        private SqlConnection GetConnection()
-        {
-            return new SqlConnection(_configuration["SQLConnection"]);
+            _dao = dao;
         }
 
         public List<Product> GetProducts()
-        {
-            using (SqlConnection conn = GetConnection()) {
-                var products = new List<Product>();
-                string sql = "SELECT ProductID, ProductName, Quantity FROM Products";
-                conn.Open();
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = sql;
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Product product = new Product()
-                        {
-                            ProductID = reader.GetInt32(0),
-                            ProductName = reader.GetString(1),
-                            Quantity = reader.GetInt32(2)
-                        };
-                        products.Add(product);
-                    }
-                }
-                conn.Close();
-                return products;
-            }
+        {  
+            string sql = "SELECT ProductID, ProductName, Quantity FROM Products";
+            var products = _dao.ExcuteQuery(sql);
+            return products;           
                 
         }
 
         public Product? GetProduct(int productId)
         {
-            using (SqlConnection conn = GetConnection())
+            string sql = $"SELECT ProductID, ProductName, Quantity FROM Products WHERE ProductID = @ProductID";
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("@ProductID", productId);
+            var products = _dao.ExcuteQuery(sql, parameters);
+            if (products.Any())
             {
-                var products = new List<Product>();
-                string sql = $"SELECT ProductID, ProductName, Quantity FROM Products WHERE ProductID = @ProductID";
-                conn.Open();
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.Parameters.Add("@ProductID", System.Data.SqlDbType.Int).Value = productId;
-                Product? product = null;
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {                    
-                    while (reader.Read())
-                    {
-                        product = new Product()
-                        {
-                            ProductID = reader.GetInt32(0),
-                            ProductName = reader.GetString(1),
-                            Quantity = reader.GetInt32(2)
-                        };                        
-                    }
-                }
-                conn.Close();
-                return product;
+                return products.FirstOrDefault();
             }
+            return null;
         }
 
-        public Product? GetProductByName(string? productName)
+        public Product? GetProductByName(string productName)
         {
-            using (SqlConnection conn = GetConnection())
+            string sql = $"SELECT ProductID, ProductName, Quantity FROM Products WHERE ProductName = @ProductName";
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("@ProductName", productName);
+            var products = _dao.ExcuteQuery(sql, parameters);
+            if (products.Any())
             {
-                var products = new List<Product>();
-                string sql = $"SELECT ProductID, ProductName, Quantity FROM Products WHERE ProductName = @ProductName";
-                conn.Open();
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.Parameters.Add("@ProductName", System.Data.SqlDbType.VarChar).Value = productName;
-                Product? product = null;
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        product = new Product()
-                        {
-                            ProductID = reader.GetInt32(0),
-                            ProductName = reader.GetString(1),
-                            Quantity = reader.GetInt32(2)
-                        };
-                    }
-                }
-                conn.Close();
-                return product;
+                return products.FirstOrDefault();
             }
+            return null;
         }
 
         public Product AddProduct(Product product)
@@ -115,22 +62,13 @@ namespace infra.Repositories
             {
                 throw new DuplicateEntityException($"There is already a product with this id {product.ProductID}");
             }
-            using (SqlConnection conn = GetConnection())
-            {
-                string insertStatement = "INSERT INTO Products (ProductID, ProductName, Quantity) VALUES (@ProductID, @ProductName, @Quantity)";
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand(insertStatement, conn))
-                {
-                    cmd.Parameters.Add("@ProductID", System.Data.SqlDbType.Int).Value = product.ProductID;
-                    cmd.Parameters.Add("@ProductName", System.Data.SqlDbType.VarChar, 1000).Value = product.ProductName;
-                    cmd.Parameters.Add("@Quantity", System.Data.SqlDbType.Int).Value = product.Quantity;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                }
-                
-                conn.Close();
-                return GetProduct(product.ProductID);
-            }
+            string dml = "INSERT INTO Products (ProductID, ProductName, Quantity) VALUES (@ProductID, @ProductName, @Quantity)";
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("@ProductID", product.ProductID);
+            parameters.Add("@ProductName", product.ProductName);
+            parameters.Add("@Quantity", product.Quantity);
+            _dao.ExcuteNonQuery(dml);
+            return GetProduct(product.ProductID);
         }
 
 
@@ -140,22 +78,13 @@ namespace infra.Repositories
             {
                 throw new EntityNotFoundException($"There is no product with this id {product.ProductID}");
             }
-            using (SqlConnection conn = GetConnection())
-            {
-                string insertStatement = "UPDATE Products SET ProductName= @ProductName , Quantity= @Quantity  WHERE ProductID= @ProductID";
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand(insertStatement, conn))
-                {
-                    cmd.Parameters.Add("@ProductID", System.Data.SqlDbType.Int).Value = product.ProductID;
-                    cmd.Parameters.Add("@ProductName", System.Data.SqlDbType.VarChar, 1000).Value = product.ProductName;
-                    cmd.Parameters.Add("@Quantity", System.Data.SqlDbType.Int).Value = product.Quantity;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                }
-
-                conn.Close();
-                return GetProduct(product.ProductID);
-            }
+            string dml = "UPDATE Products SET ProductName= @ProductName , Quantity= @Quantity  WHERE ProductID= @ProductID";
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("@ProductID", product.ProductID);
+            parameters.Add("@ProductName", product.ProductName);
+            parameters.Add("@Quantity", product.Quantity);
+            _dao.ExcuteNonQuery(dml);
+            return GetProduct(product.ProductID);
         }
 
         public void DeleteProduct(int productId)
@@ -164,19 +93,8 @@ namespace infra.Repositories
             {
                 throw new EntityNotFoundException($"There is no product with this id {productId}");
             }
-            using (SqlConnection conn = GetConnection())
-            {
-                string insertStatement = "DELETE FROM Products WHERE ProductID= @ProductID";
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand(insertStatement, conn))
-                {
-                    cmd.Parameters.Add("@ProductID", System.Data.SqlDbType.Int).Value = productId;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                }
-
-                conn.Close();
-            }
+            string dml = "DELETE FROM Products WHERE ProductID= @ProductID";
+            _dao.ExcuteNonQuery(dml);
         }
     }
 }

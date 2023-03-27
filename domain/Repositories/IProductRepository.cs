@@ -14,6 +14,6 @@ namespace domain.Repositories
         Product AddProduct(Product product);
         Product UpdateProduct(Product product);
         void DeleteProduct(int productId);
-        Product? GetProductByName(string? productName);
+        Product? GetProductByName(string productName);
     }
 }

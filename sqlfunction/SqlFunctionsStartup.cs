@@ -1,7 +1,9 @@
 ﻿using domain.Applications;
+using domain.Entities;
 using domain.Repositories;
 using domain.Services;
 using infra.Applications;
+using infra.Persistence;
 using infra.Repositories;
 using infra.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -24,6 +26,7 @@ namespace sqlfunction
             builder.Services.AddTransient<ISQLAplication, SQLAplication>();
             builder.Services.AddTransient<IProductService, ProductService>();
             builder.Services.AddTransient<IProductRepository, ProductRepository>();
+            builder.Services.AddTransient<IDAO<Product>, SimpleGenericDAO<Product>>();
             builder.Services.AddFeatureManagement();
         }
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
