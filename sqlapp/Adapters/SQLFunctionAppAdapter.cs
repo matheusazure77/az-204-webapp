@@ -8,10 +8,12 @@ namespace sqlapp.Adapters
     {
 
         private readonly IConfiguration _config;
+        private readonly ILogger _logger;
 
-        public SQLFunctionAppAdapter(IConfiguration config)
+        public SQLFunctionAppAdapter(IConfiguration config, ILogger<SQLFunctionAppAdapter> logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public async Task<ProductDTO?> GetProduct(int productId)
@@ -29,6 +31,7 @@ namespace sqlapp.Adapters
         public async Task<List<ProductDTO>> GetProducts()
         {
             var functionUrl = _config["url-function-app-get-products"];
+            _logger.LogInformation($"calling function app: [{functionUrl}]");
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(functionUrl);

@@ -12,6 +12,7 @@ using domain.Entities;
 var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0:wkew/Z2SNYqotKPRu0Z5;Secret=Dy93q7PDgqCr7HKeL/HshnL2BrExCpb0pANcNksb9vQ=";
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddConsole();
 
 builder.Host.ConfigureAppConfiguration(app => {
     app.AddAzureAppConfiguration(options=> options.Connect(connectionString).UseFeatureFlags());
