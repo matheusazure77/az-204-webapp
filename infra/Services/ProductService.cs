@@ -1,30 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Microsoft.FeatureManagement;
-using domain.Entities;
+﻿using domain.Entities;
 using domain.Services;
 using domain.Repositories;
+using domain.Exceptions;
 
 namespace infra.Services
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        private readonly IFeatureManager _featureManager;
 
-        public ProductService(IProductRepository productRepository, IFeatureManager featureManager)
+        public ProductService(IProductRepository productRepository)
         {            
-            _featureManager = featureManager;
-            _productRepository = productRepository;
-        }
-
-        public async Task<bool> IsBeta()
-        {
-            if (await _featureManager.IsEnabledAsync("beta"))
-            {
-                return true;
-            }
-            return false;
+           _productRepository = productRepository;
         }
 
         public List<Product> GetProducts()
@@ -37,9 +24,26 @@ namespace infra.Services
             return _productRepository.GetProduct(productId);
         }
 
-        public void AddProduct(Product product)
+        public Product AddProduct(Product product)
         {
-            _productRepository.AddProduct(product);
+            Product? productsWithName = _productRepository.GetProductByName(product.ProductName);
+            if (productsWithName != null && !productsWithName.ProductID.Equals(product.ProductID))
+                throw new DuplicateEntityException($"There is alredy another product with the same name: {product.ProductName}");
+            return _productRepository.AddProduct(product);
+        }
+
+        public Product UpdateProduct(Product product)        {
+            
+            Product? productsWithName = _productRepository.GetProductByName(product.ProductName);
+            if (productsWithName != null && !productsWithName.ProductID.Equals(product.ProductID))
+                throw new DuplicateEntityException($"There is alredy another product with the same name: {product.ProductName}");
+                      
+            return _productRepository.UpdateProduct(product);
+        }
+
+        public void DeleteProduct(int productId)
+        {
+            _productRepository.DeleteProduct(productId);
         }
     }
 }

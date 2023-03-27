@@ -1,9 +1,11 @@
 using Microsoft.FeatureManagement;
+using sqlapp.Adapters;
+using domain.Applications;
+using infra.Applications;
 using domain.Services;
 using infra.Services;
-using infra.Repositories;
 using domain.Repositories;
-using sqlapp.Adapters;
+using infra.Repositories;
 
 var connectionString = "Endpoint=https://webapp-config.azconfig.io;Id=R41t-l0-s0:wkew/Z2SNYqotKPRu0Z5;Secret=Dy93q7PDgqCr7HKeL/HshnL2BrExCpb0pANcNksb9vQ=";
 
@@ -16,7 +18,10 @@ builder.Host.ConfigureAppConfiguration(app => {
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddTransient<ISQLAplication, SQLAplication>();
 builder.Services.AddTransient<ISQLFunctionAppAdapter, SQLFunctionAppAdapter>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddFeatureManagement();
 
 var app = builder.Build();

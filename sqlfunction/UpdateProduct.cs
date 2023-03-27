@@ -7,30 +7,31 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using domain.Exceptions;
 using domain.DTOs;
 using domain.Applications;
+using domain.Exceptions;
 
 namespace sqlfunction
 {
-    public class AddProduct
+    public class UpdateProduct
     {
         private readonly ISQLAplication _SQLAplication;
 
-        public AddProduct(ISQLAplication SQLAplication)
+        public UpdateProduct(ISQLAplication SQLAplication)
         {
             _SQLAplication = SQLAplication;
         }
-        [FunctionName("AddProduct")]
+        [FunctionName("UpdateProduct")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)] HttpRequest req,
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            ProductDTO productDTO = JsonConvert.DeserializeObject<ProductDTO>(requestBody);
+            ProductDTO dto = JsonConvert.DeserializeObject<ProductDTO>(requestBody);
+            ProductDTO product;
             try
             {
-                productDTO = _SQLAplication.AddProduct(productDTO);
+                product = _SQLAplication.UpdateProduct(dto);
             }
             catch (DuplicateEntityException ex)
             {
@@ -41,7 +42,8 @@ namespace sqlfunction
                 return new BadRequestObjectResult(ex.Message);
             }
 
-            return new OkObjectResult(productDTO);
+
+            return new OkObjectResult(product);
         }
     }
 }

@@ -8,27 +8,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using domain.Services;
-
+using domain.Applications;
 
 namespace sqlfunction
 {
     public class GetProduct {
 
-        private readonly IProductService _productService;
+        private readonly ISQLAplication _SQLAplication;
 
-        public GetProduct(IProductService productService)
+        public GetProduct(ISQLAplication SQLAplication)
         {
-            _productService = productService;
-        }
-
-        [FunctionName("GetIsBeta")]
-        public async Task<IActionResult> RunIsBeta(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            var isBeta = _productService.IsBeta().Result;
-
-            return new OkObjectResult(isBeta);
+            _SQLAplication = SQLAplication;
         }
 
         [FunctionName("GetProducts")]
@@ -36,7 +26,7 @@ namespace sqlfunction
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {           
-            var products = _productService.GetProducts();
+            var products = _SQLAplication.GetProducts();
             return new OkObjectResult(JsonConvert.SerializeObject(products));
         }
 
@@ -46,7 +36,7 @@ namespace sqlfunction
             ILogger log)
         {
             int productId = int.Parse(req.Query["productId"]);
-            var product = _productService.GetProduct(productId);
+            var product = _SQLAplication.GetProduct(productId);
 
             if (product == null )
                 return new NotFoundObjectResult($"Product with ProductId {productId} not found");

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace domain.Exceptions
 {
-    public class DuplicateEntityException : ProductApplicationException
+    public class EntityNotFoundException : ProductApplicationException
     {
-        public DuplicateEntityException(string? message) : base(message)
+        public EntityNotFoundException(string? message) : base(message)
         {
         }
     }

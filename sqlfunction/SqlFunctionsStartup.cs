@@ -1,5 +1,7 @@
-﻿using domain.Repositories;
+﻿using domain.Applications;
+using domain.Repositories;
 using domain.Services;
+using infra.Applications;
 using infra.Repositories;
 using infra.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ namespace sqlfunction
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            builder.Services.AddTransient<ISQLAplication, SQLAplication>();
             builder.Services.AddTransient<IProductService, ProductService>();
             builder.Services.AddTransient<IProductRepository, ProductRepository>();
             builder.Services.AddFeatureManagement();

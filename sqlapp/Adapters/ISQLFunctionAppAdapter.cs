@@ -1,12 +1,13 @@
-﻿using domain.Entities;
+﻿using domain.DTOs;
 
 namespace sqlapp.Adapters
 {
     public interface ISQLFunctionAppAdapter
     {
-        Task<bool> IsBeta();
-        Task<List<Product>> GetProducts();
-        Task<Product?> GetProduct(int productId);
-        void AddProduct(Product product);
+        Task<ProductDTO> AddProduct(ProductDTO product);
+        Task<ProductDTO?> GetProduct(int productId);
+        Task<List<ProductDTO>> GetProducts();
+        Task<ProductDTO> UpdateProduct(ProductDTO productDTO);
+        Task DeleteProduct(int productId);
     }
 }

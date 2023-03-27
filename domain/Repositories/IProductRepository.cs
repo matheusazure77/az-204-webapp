@@ -11,6 +11,9 @@ namespace domain.Repositories
     {
         List<Product> GetProducts();
         Product? GetProduct(int productId);
-        void AddProduct(Product product);
+        Product AddProduct(Product product);
+        Product UpdateProduct(Product product);
+        void DeleteProduct(int productId);
+        Product? GetProductByName(string? productName);
     }
 }
