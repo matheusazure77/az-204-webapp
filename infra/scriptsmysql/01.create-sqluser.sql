@@ -1,0 +1,1 @@
+CREATE USER 'sqluser' IDENTIFIED BY '1vT!KP)99?nhjkl90';
